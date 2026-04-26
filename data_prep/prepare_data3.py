@@ -862,8 +862,8 @@ def make_bundle(out_dir: Path) -> Path:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-dir", type=Path, default=Path("/nfs/roberts/project/cpsc4830/cpsc4830_ym474/data"))
-    parser.add_argument("--out-dir", type=Path, default=Path("/nfs/roberts/project/cpsc4830/cpsc4830_ym474/data/trial2"))
+    parser.add_argument("--data-dir", type=Path, default=Path("data"))
+    parser.add_argument("--out-dir", type=Path, default=Path("data/trial2"))
     parser.add_argument("--place", type=str, default="Porto, Portugal")
     parser.add_argument("--cell-size", type=float, default=250.0)
     parser.add_argument("--buffer-m", type=float, default=500.0)
