@@ -82,5 +82,5 @@ python data_prep/prepare_data3.py \
   --chunksize 50000
 ```
 
-**The resulting `.tar.gz` file can be found here: [link]{https://drive.google.com/drive/folders/1ydVgiwBgh97HlYEWVsgMmZPN2Cj6fYJA?usp=drive_link}**.
+**The resulting `.tar.gz` file can be found here: https://drive.google.com/drive/folders/1ydVgiwBgh97HlYEWVsgMmZPN2Cj6fYJA?usp=drive_link**.
 You can also know more about the data do simple exploratory analyses using `trial2_data_readme.ipynb`.
