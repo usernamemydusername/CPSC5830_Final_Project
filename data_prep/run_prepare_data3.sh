@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=porto_heterograph_t2
-#SBATCH --output=/nfs/roberts/project/cpsc4830/cpsc4830_ym474/data/trial2/logs/porto_heterograph_%j.out
-#SBATCH --error=/nfs/roberts/project/cpsc4830/cpsc4830_ym474/data/trial2/logs/porto_heterograph_%j.err
+#SBATCH --job-name=porto_data_prep
+#SBATCH --output=logs/porto_data_prep_%j.out
+#SBATCH --error=logs/porto_data_prep_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
@@ -10,18 +10,24 @@
 
 set -euo pipefail
 
-mkdir -p /nfs/roberts/project/cpsc4830/cpsc4830_ym474/data/trial2/logs
-cd /nfs/roberts/project/cpsc4830/cpsc4830_ym474/data/trial2
+# Edit these paths for your own environment.
+PROJECT_DIR=/path/to/your/repository
+DATA_DIR=${PROJECT_DIR}/data
+OUT_DIR=${DATA_DIR}/trial2
 
-module load Python/3.12.3-GCCcore-13.3.0
-source /home/cpsc4830_ym474/my_env/bin/activate
+mkdir -p ${OUT_DIR}/logs
+mkdir -p logs
 
-which python
-python --version
- 
-python /nfs/roberts/project/cpsc4830/cpsc4830_ym474/data/prepare_data3.py \
-  --data-dir /nfs/roberts/project/cpsc4830/cpsc4830_ym474/data \
-  --out-dir /nfs/roberts/project/cpsc4830/cpsc4830_ym474/data/trial2 \
+cd ${PROJECT_DIR}
+
+# Load modules / activate environment as needed.
+# Example:
+# module load Python/3.12.3-GCCcore-13.3.0
+# source /path/to/your/venv/bin/activate
+
+python data_prep/prepare_data3.py \
+  --data-dir ${DATA_DIR} \
+  --out-dir ${OUT_DIR} \
   --cell-size 250 \
   --place "Porto, Portugal" \
   --train-frac 0.70 \
