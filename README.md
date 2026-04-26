@@ -1,5 +1,5 @@
-# CPSC5830_Final_Project
-**Context-Aware Taxi Destination Prediction via Heterogeneous Urban Graphs**
+# Context-Aware Taxi Destination Prediction via Heterogeneous Urban Graphs
+A final project for CPSC5830.
 
 **Group Member:** Charles Cai & Yidan Mei
 
