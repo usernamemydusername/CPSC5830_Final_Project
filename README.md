@@ -4,7 +4,7 @@ A final project for CPSC5830.
 **Group Member:** Charles Cai & Yidan Mei
 
 
-## Raw data
+## 1. Raw data
 
 This project uses the Porto taxi trajectory dataset from the ECML/PKDD 2015 Taxi Trajectory Prediction challenge. The preprocessing script expects the raw Kaggle files to be placed in the data directory as:
 
@@ -52,7 +52,7 @@ for name in ["train.csv", "test.csv"]:
 print("Files in data/:", os.listdir(data_dir))
 ```
 
-## Data Preparation
+## 2. Data Preparation
 
 The preprocessing script is located at `data_prep/prepare_data3.py`. It takes the raw Porto taxi files, `train.csv` and optionally `test.csv`, and converts them into the processed data bundle used by our destination prediction task. The script builds prefix-to-destination supervised examples, constructs a heterogeneous urban graph from trajectory transitions, OpenStreetMap roads, and OpenStreetMap POIs, and saves the processed outputs as a compressed `.tar.gz` bundle.
 
@@ -84,3 +84,5 @@ python data_prep/prepare_data3.py \
 
 **The resulting `.tar.gz` file can be found here: https://drive.google.com/drive/folders/1ydVgiwBgh97HlYEWVsgMmZPN2Cj6fYJA?usp=drive_link**.
 You can also know more about the data do simple exploratory analyses using `trial2_data_readme.ipynb`.
+
+## 3. Experiments
