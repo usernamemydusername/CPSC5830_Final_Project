@@ -82,7 +82,9 @@ python data_prep/prepare_data4.py \
   --chunksize 50000
 ```
 
-**The resulting `.tar.gz` file can be found here: https://drive.google.com/drive/folders/1ydVgiwBgh97HlYEWVsgMmZPN2Cj6fYJA?usp=drive_link**.
+Besides, we further create a dictionary to compute representative coordinates for each region using `build_region_coord_priors.py`. The script computes the centroid, empirical mean destination offset, and shrinkage-adjusted mean offset for each region based only on the training split. The resulting dictionary is saved as `region_coord_priors.pt` and can be used to convert a predicted destination region into a concrete latitude/longitude coordinate for Mean Haversine Distance evaluation.
+
+**The resulting `.tar.gz` and `region_coord_priors.pt` files can be found here: https://drive.google.com/drive/folders/1ydVgiwBgh97HlYEWVsgMmZPN2Cj6fYJA?usp=drive_link**.
 You can also know more about the data do simple exploratory analyses using `trial2_data_readme.ipynb`.
 
 ## 3. Experiments
