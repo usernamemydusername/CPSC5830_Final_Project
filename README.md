@@ -61,19 +61,19 @@ The expected raw data layout is:
 After running the preprocessing script, the main output is:
 
 ```text
-data/trial2/porto_data_bundle_trial2.tar.gz
+data/trial4/porto_data_bundle_trial3.tar.gz
 ```
 
 This bundle contains the processed heterogeneous graph, ID mappings, feature names, preprocessing summary, Kaggle test prefixes, and sharded supervised train/validation/test examples. This `.tar.gz` file is the data artifact used by the downstream modeling code.
 
-A SLURM example script is provided in `run_prepare_data3.sh`. It contains the command for running `data_prep/prepare_data3.py`, but users should edit the paths before running it. In particular, update the raw data directory, output directory, log directory, Python environment, and any cluster-specific resource settings. The default paths inside `prepare_data3.py` may also need to be changed or overridden through command-line arguments such as `--data-dir` and `--out-dir`.
+A SLURM example script is provided in `run_prepare_data4.sh`. It contains the command for running `data_prep/prepare_data3.py`, but users should edit the paths before running it. In particular, update the raw data directory, output directory, log directory, Python environment, and any cluster-specific resource settings. The default paths inside `prepare_data3.py` may also need to be changed or overridden through command-line arguments such as `--data-dir` and `--out-dir`.
 
 Example command:
 
 ```bash
-python data_prep/prepare_data3.py \
+python data_prep/prepare_data4.py \
   --data-dir data \
-  --out-dir data/trial2 \
+  --out-dir data/trial4 \
   --cell-size 250 \
   --place "Porto, Portugal" \
   --train-frac 0.70 \
