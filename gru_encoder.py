@@ -13,8 +13,8 @@ class GRUDestinationModel(nn.Module):
 
     Args:
         num_regions:      total number of region nodes in the graph (6750)
-        num_dest_classes: number of active destination classes (2739)
-        num_taxi_ids:     number of unique taxi IDs found in training data
+        num_dest_classes: number of active destination classes (4978, from gru_param_config.json)
+        num_taxi_ids:     number of unique taxi IDs found in training data (438, from gru_param_config.json)
         region_emb_dim:   region embedding dimension (must match GNN output dim)
         gru_hidden:       GRU hidden state size
         gru_layers:       number of GRU layers
@@ -88,9 +88,7 @@ class GRUDestinationModel(nn.Module):
             x = region_emb_matrix[prefix_ids]      # [B, T, region_emb_dim]
 
         # --- GRU over prefix ---
-        packed = pack_padded_sequence(
-            x, lengths.cpu(), batch_first=True, enforce_sorted=False
-        )
+        packed = pack_padded_sequence(x, lengths.cpu(), batch_first=True, enforce_sorted=False)
         _, hidden = self.gru(packed)               # hidden: [gru_layers, B, gru_hidden]
         traj = hidden[-1]                          # [B, gru_hidden]  last layer
 
