@@ -4,13 +4,11 @@ build_centroids.py
 Run ONCE before any training starts. Scans all training shards and produces
 three files saved inside the data bundle folder:
 
-  cell_centroids.pt
-      {compact_region_id -> (lat, lon)}
+  cell_centroids.pt: compact_region_id -> (lat, lon)
       Used in eval.py to convert a predicted region ID into a GPS coordinate
       so we can compute haversine distance against the true destination.
 
-  taxi_id_map.pt
-      {raw_taxi_id -> compact_idx}
+  taxi_id_map.pt: raw_taxi_id -> compact_idx
       The raw taxi IDs in the shard examples (e.g. 20000380) are not contiguous
       integers, so they cannot be used directly as indices into nn.Embedding.
       This map remaps them to 0-based contiguous indices.
@@ -172,7 +170,7 @@ print(f'  Sample mapping: {list(taxi_id_map.items())[:5]}')
 # ---------------------------------------------------------------------------
 gru_config = {
     'num_regions'      : int(summary['num_region_nodes']),
-    'num_dest_classes' : len(lat_acc),
+    'num_dest_classes' : int(summary['num_region_nodes']),  # predict over all regions
     'num_taxi_ids'     : len(taxi_id_map),
 }
 
