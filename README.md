@@ -82,9 +82,48 @@ python data_prep/prepare_data4.py \
   --chunksize 50000
 ```
 
-Besides, we further create a dictionary to compute representative coordinates for each region using `build_region_coord_priors.py`. The script computes the centroid, empirical mean destination offset, and shrinkage-adjusted mean offset for each region based only on the training split. The resulting dictionary is saved as `region_coord_priors.pt` and can be used to convert a predicted destination region into a concrete latitude/longitude coordinate for Mean Haversine Distance evaluation.
+
 
 **The resulting `.tar.gz` and `region_coord_priors.pt` files can be found here: https://drive.google.com/drive/folders/1ydVgiwBgh97HlYEWVsgMmZPN2Cj6fYJA?usp=drive_link**.
 You can also know more about the data do simple exploratory analyses using `trial2_data_readme.ipynb`.
+
+### Pre-training setup
+
+After extracting the bundle, run the following script once before any training:
+
+```bash
+python build_centroids.py
+```
+
+This scans all training shards and writes three files into `porto_data_bundle/`:
+
+| File | Purpose |
+|---|---|
+| `cell_centroids.pt` | Maps each region ID to a GPS centroid `(lat, lon)`, used to compute Haversine distance at evaluation time |
+| `taxi_id_map.pt` | Remaps raw taxi IDs to contiguous 0-based indices for use in `nn.Embedding` |
+| `gru_param_config.json` | Stores exact model constructor parameters (`num_regions`, `num_dest_classes`, `num_taxi_ids`) derived from the full training set; loaded by all training notebooks so no values are hardcoded |
+
+Load `gru_param_config.json` at the top of any training notebook to pass the correct values to the model constructor:
+
+```python
+import json
+import torch
+from pathlib import Path
+
+DATA_DIR = Path('porto_data_bundle')
+
+with open(DATA_DIR / 'gru_param_config.json') as f:
+    cfg = json.load(f)
+# cfg = {'num_regions': 6750, 'num_dest_classes': 4978, 'num_taxi_ids': 438}
+
+taxi_id_map = torch.load(DATA_DIR / 'taxi_id_map.pt')
+centroids   = torch.load(DATA_DIR / 'cell_centroids.pt')
+
+model = GRUDestinationModel(
+    num_regions      = cfg['num_regions'],
+    num_dest_classes = cfg['num_dest_classes'],
+    num_taxi_ids     = cfg['num_taxi_ids'],
+)
+```
 
 ## 3. Experiments
