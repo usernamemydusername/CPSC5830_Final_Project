@@ -551,7 +551,7 @@ def evaluate_with_eval_metrics(
         total += B
         total_loss += float(loss.item()) * B
         for k in k_values:
-            all_hits[k] += int(round(metrics[f"recall@{k}"] * B))
+            all_hits[k] += int(metrics[f"recall@{k}"] * B)
         all_haversine.extend(metrics["haversine_km"])
 
     out = {f"Recall@{k}": all_hits[k] / max(total, 1) for k in k_values}
