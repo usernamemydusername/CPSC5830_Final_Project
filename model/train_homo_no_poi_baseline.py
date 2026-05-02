@@ -2,12 +2,6 @@
 """
 Train a homogeneous mobility-GNN + GRU destination prediction baseline use NO poi information.
 
-This script intentionally does NOT modify:
-  - prepare_data4.py
-  - gru_encoder.py
-  - build_centroids.py
-  - eval.py
-
 Model idea:
   1. Load hetero_graph.pt, but keep only region nodes and taxi_transition edges.
   2. Run a homogeneous GNN over the region mobility graph to produce region embeddings.
@@ -373,7 +367,7 @@ def evaluate_with_eval_metrics(
         total += B
         total_loss += float(loss.item()) * B
         for k in k_values:
-            all_hits[k] += int(round(metrics[f"recall@{k}"] * B))
+            all_hits[k] += int(metrics[f"recall@{k}"] * B)
         all_haversine.extend(metrics["haversine_km"])
 
     out = {f"Recall@{k}": all_hits[k] / max(total, 1) for k in k_values}
@@ -677,13 +671,14 @@ def main() -> None:
         "Homogeneous+GRU": {
             "Recall@1": test_metrics["Recall@1"],
             "Recall@5": test_metrics["Recall@5"],
+            "Recall@10": test_metrics["Recall@10"],
             "Mean Haversine (km)": test_metrics["Mean Haversine (km)"],
             "Med Haversine (km)": test_metrics["Med Haversine (km)"],
             "n": test_metrics["n"],
         }
     }
     print_results_table(table_metrics)
-    print(f"Recall@10: {test_metrics['Recall@10']:.4f}")
+    # print(f"Recall@10: {test_metrics['Recall@10']:.4f}")
     print(f"Saved outputs under: {out_dir}")
 
 
