@@ -3,6 +3,17 @@ A final project for CPSC5830.
 
 **Group Member:** Charles Cai & Yidan Mei
 
+## 0. Environment Setup
+
+Experiments were run on the Yale cluster using SLURM with Python 3.12.3 and `uv` for environment management. To reproduce the environment, load the Python module, create/activate a virtual environment, and install the recorded dependencies:
+
+```bash
+module load Python/3.12.3-GCCcore-13.3.0
+uv venv my_env
+source my_env/bin/activate
+uv pip install -r requirements.txt
+```
+The main dependencies include PyTorch 2.5.0 with CUDA 12.1, PyTorch Geometric 2.7.0, torch-scatter, torch-cluster, GeoPandas, OSMnx, pandas, NumPy, and scikit-learn. Exact package versions are listed in `requirements.txt`.
 
 ## 1. Raw data
 
@@ -15,10 +26,6 @@ data/
 ```
 
 Below is the sample code to download the raw dataset:
-
-```bash
-pip install kagglehub
-```
 
 ```python
 import kagglehub
