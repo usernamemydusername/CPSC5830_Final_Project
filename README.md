@@ -127,7 +127,9 @@ model = GRUDestinationModel(
 
 ## 3. Experiments
 ### Baselines
-Baseline model of GRU encoded homogeneous graph model is included in the `train_homogeneous_gru_baseline.py`. An example slurm script of submitting the job is also included. It performs message passing on a homogeneous graph whose edges are historical taxi transitions, and then feeds the resulting region embeddings into the GRU trajectory encoder. It uses the same region-level features as the heterogeneous model, but removes explicit POI nodes, road nodes, and heterogeneous edge types.
+1.
+2.
+3. Baseline model of GRU encoded homogeneous graph model is included in the `train_homogeneous_gru_baseline.py`. An example slurm script of submitting the job is also included. It performs message passing on a homogeneous graph whose edges are historical taxi transitions, and then feeds the resulting region embeddings into the GRU trajectory encoder. It uses the same region-level features as the heterogeneous model, but removes explicit POI nodes, road nodes, and heterogeneous edge types.
 
 ### Methods
 
