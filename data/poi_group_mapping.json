@@ -1,0 +1,197 @@
+{
+  "description": "Maps sparse POI one-hot features from feature_names.json into coarse semantic groups for heterogeneous training only. Use max pooling over source columns. Region features are unchanged.",
+  "source_feature_file": "feature_names.json",
+  "pooling": "max",
+  "groups": {
+    "amenity_food": [
+      "amenity_restaurant",
+      "amenity_cafe",
+      "amenity_bar",
+      "amenity_pub",
+      "amenity_fast_food",
+      "amenity_cofee"
+    ],
+    "amenity_transport": [
+      "amenity_parking",
+      "amenity_parking_entrance",
+      "amenity_parking_exit",
+      "amenity_parking_access",
+      "amenity_taxi",
+      "amenity_taxi_rank",
+      "amenity_fuel",
+      "amenity_bus_station",
+      "amenity_bicycle_parking",
+      "amenity_bicycle_rental",
+      "amenity_car_rental",
+      "amenity_car_wash"
+    ],
+    "amenity_health": [
+      "amenity_pharmacy",
+      "amenity_hospital",
+      "amenity_clinic",
+      "amenity_dentist",
+      "amenity_veterinary"
+    ],
+    "amenity_education": [
+      "amenity_school",
+      "amenity_university",
+      "amenity_kindergarten",
+      "amenity_college",
+      "amenity_library",
+      "amenity_driving_school"
+    ],
+    "amenity_public_service": [
+      "amenity_bank",
+      "amenity_atm",
+      "amenity_public_building",
+      "amenity_post_office",
+      "amenity_post_box",
+      "amenity_telephone",
+      "amenity_police",
+      "amenity_townhall",
+      "amenity_courthouse",
+      "amenity_embassy",
+      "amenity_fire_station"
+    ],
+    "amenity_religion_civic": [
+      "amenity_place_of_worship",
+      "amenity_association",
+      "amenity_associaton",
+      "amenity_trade_union",
+      "amenity_foundation"
+    ],
+    "amenity_leisure_culture": [
+      "amenity_theatre",
+      "amenity_cinema",
+      "amenity_nightclub",
+      "amenity_swimming_pool",
+      "amenity_sport_club",
+      "amenity_club",
+      "amenity_garden",
+      "amenity_fountain",
+      "amenity_marketplace"
+    ],
+    "amenity_basic_service": [
+      "amenity_bench",
+      "amenity_toilets",
+      "amenity_drinking_water",
+      "amenity_waste_basket",
+      "amenity_recycling",
+      "amenity_vending_machine",
+      "amenity_elevator"
+    ],
+    "shop_food": [
+      "shop_supermarket",
+      "shop_convenience",
+      "shop_butcher",
+      "shop_bakery",
+      "shop_greengrocer",
+      "shop_confectionery",
+      "shop_pastry",
+      "shop_fishmonger"
+    ],
+    "shop_retail": [
+      "shop_clothes",
+      "shop_jewelry",
+      "shop_department_store",
+      "shop_furniture",
+      "shop_hairdresser",
+      "shop_interior_decoration",
+      "shop_gift",
+      "shop_florist",
+      "shop_antiques",
+      "shop_toys",
+      "shop_shopping_centre",
+      "shop_mall",
+      "shop_shoes",
+      "shop_glasses",
+      "shop_cristal",
+      "shop_fabric",
+      "shop_barber",
+      "shop_laundry"
+    ],
+    "shop_culture_art": [
+      "shop_books",
+      "shop_art",
+      "shop_art_gallery",
+      "shop_music"
+    ],
+    "shop_auto_transport": [
+      "shop_car",
+      "shop_car_repair",
+      "shop_bicycle",
+      "shop_motorcycle",
+      "shop_car_rental"
+    ],
+    "shop_electronics_specialty": [
+      "shop_hifi",
+      "shop_eletronics",
+      "shop_computer",
+      "shop_eletric",
+      "shop_optics",
+      "shop_optician",
+      "shop_chemist",
+      "shop_drugstore",
+      "shop_doityourself",
+      "shop_garden_centre"
+    ],
+    "shop_misc_service": [
+      "shop_kiosk",
+      "shop_travel",
+      "shop_pawnshop",
+      "shop_perfums",
+      "shop_perfum",
+      "shop_alcohol",
+      "shop_erotic",
+      "shop_yes"
+    ],
+    "tourism_lodging": [
+      "tourism_guest_house",
+      "tourism_hotel",
+      "tourism_hostel",
+      "tourism_motel"
+    ],
+    "tourism_attraction": [
+      "tourism_attraction",
+      "tourism_viewpoint",
+      "tourism_museum",
+      "tourism_artwork",
+      "tourism_monument",
+      "tourism_information"
+    ],
+    "tourism_leisure": [
+      "tourism_picnic_site",
+      "tourism_theme_park",
+      "tourism_zoo",
+      "tourism_yes"
+    ],
+    "public_transport_stop": [
+      "public_transport_platform",
+      "public_transport_stop_position",
+      "public_transport_yes"
+    ],
+    "amenity_misc": [
+      "amenity_press",
+      "amenity_typography",
+      "amenity_realestate",
+      "amenity_yes",
+      "amenity_pawn_shop",
+      "amenity_factory",
+      "amenity_resthouse",
+      "amenity_shop",
+      "amenity_hifi"
+    ],
+    "amenity_flag": [
+      "amenity_flag"
+    ],
+    "shop_flag": [
+      "shop_flag"
+    ],
+    "tourism_flag": [
+      "tourism_flag"
+    ],
+    "public_transport_flag": [
+      "public_transport_flag"
+    ]
+  }
+}
