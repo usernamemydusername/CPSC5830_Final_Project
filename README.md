@@ -54,7 +54,7 @@ print("Files in data/:", os.listdir(data_dir))
 
 ## 2. Data Preparation
 
-The preprocessing script is located at `data_prep/prepare_data3.py`. It takes the raw Porto taxi files, `train.csv` and optionally `test.csv`, and converts them into the processed data bundle used by our destination prediction task. The script builds prefix-to-destination supervised examples, constructs a heterogeneous urban graph from trajectory transitions, OpenStreetMap roads, and OpenStreetMap POIs, and saves the processed outputs as a compressed `.tar.gz` bundle.
+The preprocessing script is located at `data_prep/prepare_data4.py`. It takes the raw Porto taxi files, `train.csv` and optionally `test.csv`, and converts them into the processed data bundle used by our destination prediction task. The script builds prefix-to-destination supervised examples, constructs a heterogeneous urban graph from trajectory transitions, OpenStreetMap roads, and OpenStreetMap POIs, and saves the processed outputs as a compressed `.tar.gz` bundle.
 
 The expected raw data layout is:
 
@@ -66,7 +66,7 @@ data/trial4/porto_data_bundle_trial3.tar.gz
 
 This bundle contains the processed heterogeneous graph, ID mappings, feature names, preprocessing summary, Kaggle test prefixes, and sharded supervised train/validation/test examples. This `.tar.gz` file is the data artifact used by the downstream modeling code.
 
-A SLURM example script is provided in `run_prepare_data4.sh`. It contains the command for running `data_prep/prepare_data3.py`, but users should edit the paths before running it. In particular, update the raw data directory, output directory, log directory, Python environment, and any cluster-specific resource settings. The default paths inside `prepare_data3.py` may also need to be changed or overridden through command-line arguments such as `--data-dir` and `--out-dir`.
+A SLURM example script is provided in `run_prepare_data4.sh`. It contains the command for running `data_prep/prepare_data4.py`, but users should edit the paths before running it. In particular, update the raw data directory, output directory, log directory, Python environment, and any cluster-specific resource settings. The default paths inside `prepare_data4.py` may also need to be changed or overridden through command-line arguments such as `--data-dir` and `--out-dir`.
 
 Example command:
 
@@ -81,7 +81,6 @@ python data_prep/prepare_data4.py \
   --num-prefix-samples 5 \
   --chunksize 50000
 ```
-
 
 
 **The resulting `.tar.gz` and `region_coord_priors.pt` files can be found here: https://drive.google.com/drive/folders/1ydVgiwBgh97HlYEWVsgMmZPN2Cj6fYJA?usp=drive_link**.
@@ -127,3 +126,41 @@ model = GRUDestinationModel(
 ```
 
 ## 3. Experiments
+### Baselines
+Baseline model of GRU encoded homogeneous graph model is included in the `train_homogeneous_gru_baseline.py`. An example slurm script of submitting the job is also included.
+
+### Methods
+
+1. GRU encoded heterogeneous R-GCN is included in `train_heterogeneous_rgcn_gru.py`. An example slurm script of submitting the job is also included.
+   * Since..., we further group the POI features by hand using `data/poi_group_mapping.json` and then applying the R-GCN model. The code is included in `train_heterogeneous_group_rgcn_gru.py`.
+   * Ablation analyses: we do the following ablation analyses:
+     1) Exclude all poi information and run GRU encoded homogeneous graph (`train_homo_no_poi_baseline.py`).
+     2) Set `--edge-set region_features_only` when running `train_heterogeneous_group_rgcn_gru.py` to see whether message passing contributes to the model performance.
+     3) Set `-edge-set no_road` to exclude road information. One can also do more options when training, e.g., "..."
+   * One can repeat training for multiple times by setting SEED values. i.e.,
+     ```bash
+     for SEED in 123 456 789 {whatever integer seed you like}
+         ...
+     ```
+   * The resulting structure of the codespace is:
+     ```text
+     data/
+     model/
+     ├── train_heterogeneous_group_rgcn_gru.py
+     ├── run_hetero_group_rgcn_gru_multiseed.sh
+     └── runs/
+         ├── hetero_group_rgcn_sage_gru/full
+             ├── seed123
+             ├── seed456
+             ├── seed123
+                 ├── test_metrics.json
+                 ├── training_history.csv
+                 └── best_hetero_rgcn_gru.pt
+         ├── model_2
+         ...
+     ```
+     The evaluation metrics being used are recall@k (k = 1, 5, 10) and mean/med Haversine distance. By running `summarize_model_runs.py`, one can get summary statistics of test metrics for different models across different seeds. The resulting statistics will be stored under `runs/summary`.
+
+2. 
+
+
