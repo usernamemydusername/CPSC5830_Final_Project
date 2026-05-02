@@ -3,7 +3,7 @@
 Train a heterogeneous R-GCN-style encoder + GRU destination prediction model.
 POI features are grouped in poi_group_mapping.json
 
-This script intentionally does NOT modify:
+This script does NOT modify:
   - prepare_data4.py
   - gru_encoder.py
   - build_centroids.py
@@ -19,7 +19,7 @@ Model idea:
      and prediction head.
   5. Train with cross-entropy over compact region IDs and evaluate with eval.py metrics.
 
-Why this is report-friendly:
+Notes:
   - The heterogeneous graph encoder is the only changed component relative to the
     homogeneous GRU baseline; the GRU, metadata embeddings, head, loss, and metrics
     stay aligned for a fair comparison.
@@ -891,13 +891,14 @@ def main() -> None:
         "HeteroRGCN+GRU": {
             "Recall@1": test_metrics["Recall@1"],
             "Recall@5": test_metrics["Recall@5"],
+            "Recall@10": test_metrics["Recall@10"],
             "Mean Haversine (km)": test_metrics["Mean Haversine (km)"],
             "Med Haversine (km)": test_metrics["Med Haversine (km)"],
             "n": test_metrics["n"],
         }
     }
     print_results_table(table_metrics)
-    print(f"Recall@10: {test_metrics['Recall@10']:.4f}")
+    # print(f"Recall@10: {test_metrics['Recall@10']:.4f}")
     print(f"Best epoch: {best_epoch}")
     print(f"Saved outputs under: {out_dir}")
 
