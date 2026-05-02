@@ -26,5 +26,5 @@ python --version
 
 python summarize_model_runs.py \
   --model hetero_rgcn_gru=/nfs/roberts/project/cpsc4830/cpsc4830_ym474/model/runs/hetero_group_rgcn_sage_gru/full \
-  --seeds 123 456 \
+  --seeds 123 456 789\
   --out-dir ${RUN_DIR}
