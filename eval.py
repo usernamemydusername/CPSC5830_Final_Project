@@ -50,7 +50,7 @@ def compute_metrics(
     true_lats:    torch.Tensor,
     true_lons:    torch.Tensor,
     centroids:    dict,
-    k_values:     tuple = (1, 5),
+    k_values:     tuple = (1, 5, 10),
 ) -> dict:
     """
     Compute Recall@K and haversine distance for a batch of predictions.
@@ -65,7 +65,7 @@ def compute_metrics(
         k_values:     which K values to compute Recall@K for
 
     Returns:
-        dict with keys: recall@1, recall@5, haversine_km (list of per-example errors)
+        dict with keys: recall@1, recall@5, recall@10, haversine_km
     """
     B = topk_preds.shape[0]
     hits = {k: 0 for k in k_values}
@@ -98,27 +98,26 @@ def compute_metrics(
 def evaluate_model(
     model,
     loader,
-    centroids: dict,
-    device:    torch.device,
+    centroids:    dict,
+    device:       torch.device,
     graph_data=None,
-    k_values:  tuple = (1, 5),
+    region_feats=None,
+    k_values:     tuple = (1, 5, 10),
 ) -> dict:
     """
-    Full evaluation loop for neural models (GRU, GCN, R-GCN, HGT).
+    Full evaluation loop for neural models (GRU, GCN, R-GCN, HGT, MLP).
 
     Args:
-        model:      nn.Module with forward(prefix_ids, lengths, metadata,
-                    region_emb_matrix=None) -> logits [B, num_classes]
-        loader:     DataLoader yielding batches in the format described above
-        centroids:  {region_id -> (lat, lon)} from cell_centroids.pt
-        device:     torch.device
-        graph_data: HeteroData on device for graph models; None for pure GRU.
-                    The model is responsible for running its GNN encoder and
-                    passing the resulting region_emb_matrix to GRUDestinationModel.
-        k_values:   which K values to compute Recall@K for
+        model:        nn.Module
+        loader:       DataLoader yielding batches in the format described above
+        centroids:    {region_id -> (lat, lon)} from cell_centroids.pt
+        device:       torch.device
+        graph_data:   HeteroData on device — for HGT/GNN models; None otherwise
+        region_feats: [num_regions, feat_dim] tensor on device — for MLP model
+        k_values:     which K values to compute Recall@K for
 
     Returns:
-        dict with Recall@1, Recall@5, Mean Haversine (km), Median Haversine (km)
+        dict with Recall@1, Recall@5, Recall@10, Mean/Med Haversine (km)
     """
     model.eval()
 
@@ -137,9 +136,10 @@ def evaluate_model(
             dest_lon    = batch['dest_lon']
             metadata    = {k: v.to(device) for k, v in batch['metadata'].items()}
 
-            # Forward pass — graph models pass graph_data internally or accept it here
-            logits = model(prefix_ids, lengths, metadata, graph_data=graph_data)
-            # logits: [B, num_classes]
+            if region_feats is not None:
+                logits = model(prefix_ids, lengths, metadata, region_feats)
+            else:
+                logits = model(prefix_ids, lengths, metadata, graph_data=graph_data)
 
             # Top-K predicted region IDs
             topk_preds = logits.topk(max_k, dim=-1).indices.cpu()  # [B, max_k]
@@ -157,6 +157,7 @@ def evaluate_model(
     return {
         'Recall@1'            : all_hits[1]  / total,
         'Recall@5'            : all_hits[5]  / total,
+        'Recall@10'           : all_hits[10] / total,
         'Mean Haversine (km)' : float(np.mean(all_haversine)),
         'Med Haversine (km)'  : float(np.median(all_haversine)),
         'n'                   : total,
@@ -180,7 +181,7 @@ def print_results_table(results: dict[str, dict]) -> None:
             'GRU+HGT': hgt_results,
         })
     """
-    header = f'{"Model":<22} {"R@1":>7} {"R@5":>7} {"Mean H":>10} {"Med H":>10}'
+    header = f'{"Model":<22} {"R@1":>7} {"R@5":>7} {"R@10":>7} {"Mean H":>10} {"Med H":>10}'
     sep    = '=' * len(header)
     print(sep)
     print(header)
@@ -190,6 +191,7 @@ def print_results_table(results: dict[str, dict]) -> None:
             f'{name:<22} '
             f'{r["Recall@1"]:>7.4f} '
             f'{r["Recall@5"]:>7.4f} '
+            f'{r["Recall@10"]:>7.4f} '
             f'{r["Mean Haversine (km)"]:>10.3f} '
             f'{r["Med Haversine (km)"]:>10.3f}'
         )
