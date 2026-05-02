@@ -127,20 +127,28 @@ model = GRUDestinationModel(
 
 ## 3. Experiments
 ### Baselines
-Baseline model of GRU encoded homogeneous graph model is included in the `train_homogeneous_gru_baseline.py`. An example slurm script of submitting the job is also included.
+Baseline model of GRU encoded homogeneous graph model is included in the `train_homogeneous_gru_baseline.py`. An example slurm script of submitting the job is also included. It performs message passing on a homogeneous graph whose edges are historical taxi transitions, and then feeds the resulting region embeddings into the GRU trajectory encoder. It uses the same region-level features as the heterogeneous model, but removes explicit POI nodes, road nodes, and heterogeneous edge types.
 
 ### Methods
 
 1. GRU encoded heterogeneous R-GCN is included in `train_heterogeneous_rgcn_gru.py`. An example slurm script of submitting the job is also included.
-   * Since..., we further group the POI features by hand using `data/poi_group_mapping.json` and then applying the R-GCN model. The code is included in `train_heterogeneous_group_rgcn_gru.py`.
+   * Since the raw POI features are sparse and high-dimensional, we further group the POI features manually using `data/poi_group_mapping.json` and then train the grouped heterogeneous R-GCN model. The corresponding code is included in train_heterogeneous_group_rgcn_gru.py`.
    * Ablation analyses: we do the following ablation analyses:
      1) Exclude all poi information and run GRU encoded homogeneous graph (`train_homo_no_poi_baseline.py`).
-     2) Set `--edge-set region_features_only` when running `train_heterogeneous_group_rgcn_gru.py` to see whether message passing contributes to the model performance.
-     3) Set `-edge-set no_road` to exclude road information. One can also do more options when training, e.g., "..."
-   * One can repeat training for multiple times by setting SEED values. i.e.,
+     2) Set `--edge-set region_features_only` when running `train_heterogeneous_group_rgcn_gru.py` to see whether message passing contributes to the model performance. In this setting, the model does not use any graph edges or message passing. It only projects each region's static features into a region embedding before feeding the prefix sequence to the GRU.
+     3) Optional: set `--edge-set no_road` to exclude road nodes and road-related edges. This tests whether road-network information contributes to performance.
+     4) Optional: set `--edge-set no_poi` to exclude POI nodes and POI-related edges from the heterogeneous graph. This tests whether explicit POI nodes provide additional benefit beyond region-level features.
+     5) Optional: set `--edge-set taxi_only` to keep only taxi-transition edges between regions. This tests whether the heterogeneous model's performance mainly comes from historical mobility transitions rather than POI or road context.
+   * For multple-seed runs, one can repeat training with different seed values by setting SEED values. i.e.,
      ```bash
      for SEED in 123 456 789 {whatever integer seed you like}
-         ...
+     do
+       python train_heterogeneous_group_rgcn_gru.py \
+           --data-dir ${DATA_DIR} \
+           --out-dir ${BASE_RUN_DIR}/seed${SEED} \
+           --seed ${SEED} \
+           ...
+     done
      ```
    * The resulting structure of the codespace is:
      ```text
@@ -152,14 +160,14 @@ Baseline model of GRU encoded homogeneous graph model is included in the `train_
          ├── hetero_group_rgcn_sage_gru/full
              ├── seed123
              ├── seed456
-             ├── seed123
+             └── seed123
                  ├── test_metrics.json
                  ├── training_history.csv
                  └── best_hetero_rgcn_gru.pt
          ├── model_2
          ...
      ```
-     The evaluation metrics being used are recall@k (k = 1, 5, 10) and mean/med Haversine distance. By running `summarize_model_runs.py`, one can get summary statistics of test metrics for different models across different seeds. The resulting statistics will be stored under `runs/summary`.
+     The evaluation metrics being used are recall@k (k = 1, 5, 10) and mean/med Haversine distance. By running `summarize_model_runs.py`, one can get summary statistics (including mean and standard deviation) of test metrics for different models across different seeds. The resulting statistics will be stored under `runs/summary`.
 
 2. 
 
