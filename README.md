@@ -176,7 +176,8 @@ model = GRUDestinationModel(
          ├── model_2
          ...
      ```
-     The evaluation metrics being used are recall@k (k = 1, 5, 10) and mean/med Haversine distance. By running `summarize_model_runs.py`, one can get summary statistics (including mean and standard deviation) of test metrics for different models across different seeds. The resulting statistics will be stored under `runs/summary`.
+   * The evaluation metrics being used are recall@k (k = 1, 5, 10) and mean/med Haversine distance. By running `summarize_model_runs.py`, one can get summary statistics (including mean and standard deviation) of test metrics for different models across different seeds. The resulting statistics will be stored under `runs/summary`.
+   * Subgroup Analyses: Running `eval/eval_dest_poi_group.py`, one can compare test performance for destinations with POIs vs. destinations without POIs.
 
 2. 
 
