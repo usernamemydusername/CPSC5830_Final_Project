@@ -150,6 +150,7 @@ model = GRUDestinationModel(
      5) Optional: set `--edge-set taxi_only` to keep only taxi-transition edges between regions. This tests whether the heterogeneous model's performance mainly comes from historical mobility transitions rather than POI or road context.
    * For multple-seed runs, one can repeat training with different seed values by setting SEED values. i.e.,
      ```bash
+     # Detailed command can be found in 'model/run_hetero_group_rgcn_gru_multiseed.sh'
      for SEED in 123 456 789 {whatever integer seed you like}
      do
        python train_heterogeneous_group_rgcn_gru.py \
