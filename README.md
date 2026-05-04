@@ -138,8 +138,8 @@ model = GRUDestinationModel(
 
 ## 3. Experiments
 ### Baselines
-1.
-2.
+1. The Markov baseline is implemented in `markov.ipynb`. It predicts the destination cell from the last cell of the prefix using empirical transition counts from the training set, with no learned parameters. For cells unseen in training, it falls back to the global destination frequency distribution.
+2. The MLP baseline is implemented in `mlp.ipynb`, with the model defined in `mlp_model.py`. It encodes each prefix as a fixed-length feature vector built from the first and last region in the prefix, concatenated with metadata embeddings, and passed through a 2-layer MLP to predict the destination cell. No recurrent encoder or graph is used.
 3. Baseline model of GRU encoded homogeneous graph model is included in the `train_homogeneous_gru_baseline.py`. An example slurm script of submitting the job is also included. It performs message passing on a homogeneous graph whose edges are historical taxi transitions, and then feeds the resulting region embeddings into the GRU trajectory encoder. It uses the same region-level features as the heterogeneous model, but removes explicit POI nodes, road nodes, and heterogeneous edge types.
 
 ### Methods
@@ -184,6 +184,7 @@ model = GRUDestinationModel(
    * The evaluation metrics being used are recall@k (k = 1, 5, 10) and mean/med Haversine distance. By running `summarize_model_runs.py`, one can get summary statistics (including mean and standard deviation) of test metrics for different models across different seeds. The resulting statistics will be stored under `runs/summary`.
    * Subgroup Analyses: Running `eval/eval_dest_poi_group.py`, one can compare test performance for destinations with POIs vs. destinations without POIs.
 
-2. 
+2. GRU encoded heterogeneous HGT is implemented in `hgt_train.py`, with the model defined in `hgt_model.py`. A SLURM example script is included in `hgt.ipynb` for interactive runs. The HGT encoder uses type-specific Q/K/V projections with meta-relation attention across all heterogeneous edge types, feeding the resulting region embeddings into the shared GRU trajectory encoder. For multiple-seed runs, set the `--seed` argument and repeat training. Trained checkpoints are saved as `hgt_best_seed{N}.pt`. Evaluation uses the same `eval.py` and `aggregate_results.py` scripts as the other models.
+
 
 
