@@ -25,38 +25,41 @@ data/
 └── test.csv
 ```
 
-Below is the sample code to download the raw dataset:
+The file `train.csv` is required for constructing the supervised training, validation, and test splits. The file `test.csv` is used to construct unlabeled Kaggle test prefixes when available.
+
+The raw dataset can be downloaded using KaggleHub. This requires Kaggle authentication and access to the competition data.
 
 ```python
 import kagglehub
-import os
 import zipfile
+import os
 import shutil
-from pathlib import Path
 
-# Download Kaggle data.
-cache_dir = Path(
-    kagglehub.competition_download(
-        "pkdd-15-predict-taxi-service-trajectory-i"
-    )
+# Download Kaggle competition data.
+data_dir = kagglehub.competition_download(
+    "pkdd-15-predict-taxi-service-trajectory-i"
 )
+print("Downloaded to:", data_dir)
 
-# Unzip downloaded files.
-for f in cache_dir.iterdir():
-    if f.suffix == ".zip":
-        with zipfile.ZipFile(f, "r") as z:
-            z.extractall(cache_dir)
+# Unzip downloaded files if needed.
+for f in os.listdir(data_dir):
+    if f.endswith(".zip"):
+        zip_path = os.path.join(data_dir, f)
+        with zipfile.ZipFile(zip_path, "r") as z:
+            z.extractall(data_dir)
 
-# Copy train.csv and test.csv to the project data directory.
-data_dir = Path("data")
-data_dir.mkdir(parents=True, exist_ok=True)
+# Copy raw files to the project data directory.
+project_raw = "data" # you can change this to your data directory
+os.makedirs(project_raw, exist_ok=True)
 
 for name in ["train.csv", "test.csv"]:
-    src = cache_dir / name
-    if src.exists():
-        shutil.copy2(src, data_dir / name)
+    src = os.path.join(data_dir, name)
+    dst = os.path.join(project_raw, name)
+    if not os.path.exists(src):
+        raise FileNotFoundError(f"Could not find {src}")
+    shutil.copy2(src, dst)
 
-print("Files in data/:", os.listdir(data_dir))
+print("Files in project data directory:", os.listdir(project_raw))
 ```
 
 ## 2. Data Preparation
@@ -83,6 +86,7 @@ python data_prep/prepare_data4.py \
   --out-dir data/trial4 \
   --cell-size 250 \
   --place "Porto, Portugal" \
+  --osm-date "2014-06-30T23:59:59Z" \
   --train-frac 0.70 \
   --val-frac 0.15 \
   --num-prefix-samples 5 \
